@@ -1,0 +1,15 @@
+groups:
+ - name: example
+   rules:
+   - alert: InstanceDown
+     expr: up == 0
+     for: 1m
+
+   - alert: HostOutOfDiskSpace
+     expr: (node_filesystem_avail_bytes{mountpoint="/"}* 100) / node_filesystem_size_bytes{mountpoint="/"} < 99
+     for: 1s
+     labels:
+       severity: warning
+     annotations:
+       summary: "Host out of disk space (instance {{ $labels.instance }})"
+       description: "Disk is almost full (< xx% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
