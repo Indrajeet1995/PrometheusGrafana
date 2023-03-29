@@ -1,7 +1,11 @@
-Prometheus service Configurations
+## Prometheus service Configurations
+```
+vim /etc/systemd/system/prometheus.service
 
-/etc/systemd/system/prometheus.service
+```
+## Update the file below with necessary changes
 
+```
 [Unit]
 Description=Prometheus Server
 Documentation=https://prometheus.io/docs/introduction/overview/
@@ -19,16 +23,21 @@ ExecStart=/home/prometheus/prometheus/prometheus \
 
 [Install]
 WantedBy=multi-user.target
+```
 
 
 
 
 
+##Node Exporter Service Configurations
 
-Node Exporter Service Configurations
+```
+vim /etc/systemd/system/node_exporter.service
+```
 
-/etc/systemd/system/node_exporter.service
+## Update the file below with necessary changes
 
+```
 [Unit]
 Description=Node Exporter
 Wants=network-online.target
@@ -40,18 +49,16 @@ ExecStart=/home/prometheus/node_exporter/node_exporter
 
 [Install]
 WantedBy=default.target
+```
 
+## Edit the prometheus configuration file to add node_exporter and alerting rules file name
 
+```
+vim /etc/prometheus/prometheus.yml
+```
 
-
-
-
-
-
-Editing prometheus configuration file to add node_exporter and alerting rules file name
-
-/etc/prometheus/prometheus.yml
-
+Update the Job name
+```
 rule_files:
   - "alert_rules.yml"
 
@@ -59,16 +66,12 @@ rule_files:
 - job_name: 'node_exporter'
   static_configs:
     - targets: ['localhost:9100']
+```
 
 
+## Update the alert_rule.yml as below
 
-
-
-
-
-alert_rule.yml
-
-
+```
 groups:
  - name: example
    rules:
@@ -84,16 +87,18 @@ groups:
      annotations:
        summary: "Host out of disk space (instance {{ $labels.instance }})"
        description: "Disk is almost full (< xx% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+```
 
 
 
+## Edit the Alertmanager configuration file to add send mail using SMTP protocol in Prometheus
 
+```
+vim /etc/alertmanager/alertmanager.yml
+```
 
-
-Editing Alertmanager configuration file to add send mail using SMTP protocol in Prometheus
-
-/etc/alertmanager/alertmanager.yml
-
+## Update the file below with necessary changes
+```
 route:
   group_by: [Alertname]
   # Send all notifications to me.
@@ -108,14 +113,19 @@ receivers:
     auth_username: "abc@gmail.com"
     auth_identity: "abc@gmail.com"
     auth_password: "abc"
+```
 
 
 
 
+## Edit the grafana.ini to configure SMTP in Grafana
+```
+vim /etc/grafana/grafana.ini
+```
 
-Editing grafana.ini to configure SMTP in Grafana
-/etc/grafana/grafana.ini
+## Update the file below with necessary changes
 
+```
 #################################### SMTP / Emailing ##########################
 [smtp]
 enabled = true
@@ -132,30 +142,32 @@ from_name = Grafana
 
 
 ##############################################################################
+``` 
+
 
 https://www.howtoforge.com/tutorial/how-to-install-prometheus-and-node-exporter-on-centos-7/ 
-Reffered for installing and configuring Prometheus and node exporter
+- Reffered for installing and configuring Prometheus and node exporter
 
 https://www.howtoforge.com/tutorial/how-to-install-grafana-on-linux-servers/
-Reffered for installing and configuring Grafana
+- Reffered for installing and configuring Grafana
 
 https://techexpert.tips/grafana/grafana-email-notification-setup/
-Reffered for Grafana Notifications Setup
+- Reffered for Grafana Notifications Setup
 
 https://grafana.com/docs/grafana/latest/alerting/notifications/
-Reffered for Grafana Notifications Setup
+- Reffered for Grafana Notifications Setup
 
 https://github.com/vipin-k/Prometheus-Tutorial/tree/master/Alert-Manager
-Reffered for Alertmanager Setup
+- Reffered for Alertmanager Setup
 
 https://github.com/shazforiot/Prometheusalertmanager
-Reffered for Alertmanager Setup
+- Reffered for Alertmanager Setup
 
 https://www.youtube.com/watch?v=U69YYWV7BW0&t=312s
-How to get email alerts from grafana to gmail or your internal smtp server
+- How to get email alerts from grafana to gmail or your internal smtp server
 
 https://www.youtube.com/watch?v=YUabB_7H710
-Grafana Dashboard📊: Monitor CPU, Memory, Disk and Network Traffic Using Prometheus and Node Exporter
+- Grafana Dashboard📊: Monitor CPU, Memory, Disk and Network Traffic Using Prometheus and Node Exporter
 
 https://www.youtube.com/watch?v=a5wGy27cuBQ
-Install Alert Manager & Configure Alert Manager in Prometheus
+- Install Alert Manager & Configure Alert Manager in Prometheus
